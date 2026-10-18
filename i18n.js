@@ -185,6 +185,11 @@
   };
   window.siteTranslate = t;
   function switchLanguage(nextLanguage) {
+    // Keep visitor-entered paths and the expanded prompt cards untouched.
+    const pathInputs = [...document.querySelectorAll("#workspace-input, #asar-input")];
+    const pathValues = pathInputs.map(input => input.value);
+    const promptDetails = [...document.querySelectorAll(".prompt-card details")];
+    const openStates = promptDetails.map(details => details.open);
     language = nextLanguage === "fa" ? "fa" : "en";
     const isFa = language === "fa";
     document.documentElement.lang = language;
@@ -206,6 +211,8 @@
     if (isFa) url.searchParams.set("lang", "fa");
     else url.searchParams.delete("lang");
     window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    pathInputs.forEach((input, index) => { input.value = pathValues[index]; });
+    promptDetails.forEach((details, index) => { details.open = openStates[index]; });
     if (typeof window.siteRefreshDynamic === "function") window.siteRefreshDynamic();
   }
   langButton.addEventListener("click", () => switchLanguage(language === "en" ? "fa" : "en"));

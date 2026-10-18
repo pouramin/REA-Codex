@@ -1,15 +1,19 @@
 # REA + Codex — A Practical Reverse Engineering Guide
 
-An English-language, single-page companion to the TunnelLab video on using REA and Codex to investigate an installed Electron application and independently implement selected functionality.
+A bilingual (English and Persian), single-page companion to the TunnelLab video on using REA and Codex to investigate an installed Electron application and independently implement selected functionality.
 
-**Website:** https://pouramin.github.io/REA-Codex/
+**English (default):** https://pouramin.github.io/REA-Codex/
+
+**Persian (فارسی):** https://pouramin.github.io/REA-Codex/?lang=fa
+
+Switch languages instantly with the button in the header. Persian uses a right-to-left layout and Vazirmatn; technical prompts remain in English.
 
 ## What's included
 
 - Windows prerequisites and REA MCP setup for local Codex.
 - PowerShell commands for finding `app.asar` and other `.asar` archives.
 - Browser-based, permission-controlled folder selection that identifies ASAR filenames locally.
-- Editable workspace and target-package paths, dynamically inserted into the prompts.
+- Editable workspace and target-package paths, dynamically inserted into the prompts and preserved when switching languages.
 - Seven copy-ready prompts: ASAR discovery, preflight, targeted investigation, independent app development, validation, final reporting, and MCP troubleshooting.
 - Guidance on what can and cannot be inferred from reverse-engineering evidence.
 
@@ -24,7 +28,8 @@ This is a static website: no build step, backend, account, or API key is require
 
 ## Files
 
-- `index.html` — the complete English website, design, interactive guide, and prompt templates.
+- `index.html` — page markup, responsive styles, interactive ASAR finder, and prompt templates.
+- `i18n.js` — English/Persian localization, RTL switching, and translated interactive messages.
 - `README.md` — this documentation.
 - `.nojekyll` — disables Jekyll processing to preserve prompt template placeholders.
 

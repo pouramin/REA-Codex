@@ -1,37 +1,44 @@
-# REA + Codex — راهنمای عملی مهندسی معکوس
+# REA + Codex — A Practical Reverse Engineering Guide
 
-یک راهنمای تک‌صفحه‌ای فارسی برای همراهی با ویدیوی TunnelLab، شامل نصب و تست اتصال REA به Codex، پیدا کردن فایل‌های `.asar` در ویندوز، پرامپت‌های قابل‌کپی، ساخت نسخهٔ مستقل و اعتبارسنجی نتایج.
+An English-language, single-page companion to the TunnelLab video on using REA and Codex to investigate an installed Electron application and independently implement selected functionality.
 
-## وب‌سایت
+**Website:** https://pouramin.github.io/REA-Codex/
 
-**https://pouramin.github.io/REA-Codex/**
+## What's included
 
-> این لینک بعد از فعال‌کردن GitHub Pages در تنظیمات مخزن در دسترس خواهد بود.
+- Windows prerequisites and REA MCP setup for local Codex.
+- PowerShell commands for finding `app.asar` and other `.asar` archives.
+- Browser-based, permission-controlled folder selection that identifies ASAR filenames locally.
+- Editable workspace and target-package paths, dynamically inserted into the prompts.
+- Seven copy-ready prompts: ASAR discovery, preflight, targeted investigation, independent app development, validation, final reporting, and MCP troubleshooting.
+- Guidance on what can and cannot be inferred from reverse-engineering evidence.
 
-## انتشار با GitHub Pages
+## GitHub Pages deployment
 
-1. وارد **Settings → Pages** همین مخزن شوید.
-2. در بخش **Build and deployment**، گزینهٔ **Deploy from a branch** را انتخاب کنید.
-3. شاخهٔ **main** و پوشهٔ **/(root)** را انتخاب کنید.
-4. **Save** را بزنید و منتظر تکمیل انتشار بمانید.
+1. Open the repository's **Settings → Pages**.
+2. Under **Build and deployment**, choose **Deploy from a branch**.
+3. Choose the **main** branch and **/(root)** directory.
+4. Save and wait for publication.
 
-صفحه کاملاً استاتیک است و به سرور یا فرایند build احتیاج ندارد.
+This is a static website: no build step, backend, account, or API key is required.
 
-## فایل‌ها
+## Files
 
-- `index.html` — کل سایت شامل استایل، راهنما، پرامپت‌ها و ابزار پیدا کردن فایل ASAR.
-- `README.md` — معرفی و راهنمای انتشار.
+- `index.html` — the complete English website, design, interactive guide, and prompt templates.
+- `README.md` — this documentation.
+- `.nojekyll` — disables Jekyll processing to preserve prompt template placeholders.
 
-## امنیت و حریم خصوصی
+## Privacy and limitations
 
-- مسیرهایی که کاربر وارد می‌کند فقط در همان صفحه پردازش می‌شوند و آپلود یا ذخیره نمی‌شوند.
-- مرورگر نمی‌تواند بدون انتخاب پوشه توسط کاربر، در فایل‌های سیستم جست‌وجو کند.
-- ابزار انتخاب پوشه فقط مسیرهای نسبی را نشان می‌دهد؛ پیدا کردن مسیر مطلق نصب با PowerShell انجام می‌شود.
-- این پروژه کد، باینری یا منابع اختصاصی Xmind را توزیع نمی‌کند.
-- REA و Codex هر دو باید طبق مجوزهای مربوط به نرم‌افزارهای هدف استفاده شوند.
+- Custom paths stay in the visitor's browser. They are not uploaded or stored by this website.
+- Browser folder scanning only inspects a folder that the visitor explicitly selects; it does not expose absolute filesystem paths.
+- ASAR files are common in Electron applications, but not all apps use the ASAR format.
+- This repository does **not** distribute proprietary Xmind source code, application binaries, or assets.
+- Investigate software only where permitted by applicable law and license terms.
+- REA-assisted investigation does not imply complete original source recovery, and an independently rebuilt app is not the original application.
 
-## لینک‌ها
+## Links
 
 - [REA](https://rea.tools/)
 - [Codex](https://openai.com/codex/)
-- [TunnelLab on GitHub](https://github.com/pouramin)
+- [TunnelLab GitHub profile](https://github.com/pouramin)

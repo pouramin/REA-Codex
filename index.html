@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f9fafc">
+  <meta name="description" content="راهنمای فارسی مهندسی معکوس با REA و Codex: پیدا کردن فایل app.asar، نصب و اتصال MCP، پرامپت‌های قابل کپی، ساخت و تست نرم‌افزار مستقل.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="REA + Codex | از مهندسی معکوس تا ساخت برنامه">
+  <meta property="og:description" content="پرامپت‌های واقعی، راهنمای پیدا کردن ASAR و مسیر کامل یک آزمایش عملی با REA و Codex.">
+  <meta property="og:url" content="https://pouramin.github.io/REA-Codex/">
+  <link rel="canonical" href="https://pouramin.github.io/REA-Codex/">
+  <title>REA + Codex | راهنمای عملی مهندسی معکوس</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#122238;--muted:#627187;--edge:#dfe6f0;--orange:#f1843d;--blue:#3266ca;--bg:#f9fafc;--white:#fff;--radius:20px;--shadow:0 18px 60px rgba(23,49,82,.06)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.95 "Vazirmatn",Tahoma,sans-serif}
+    ::selection{background:#fbd7b9;color:#172b43}a{color:#244ca2;text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}button{cursor:pointer}
+    .top{position:sticky;top:0;z-index:20;background:rgba(249,250,252,.91);backdrop-filter:blur(16px);border-bottom:1px solid var(--edge)}
+    .topin{max-width:1230px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:13px 26px;gap:18px}.brand{display:flex;gap:11px;align-items:center;color:var(--ink);font-weight:900;letter-spacing:-.4px}.mark{width:37px;height:37px;border-radius:12px;display:grid;place-items:center;background:#1f4c9e;color:#fff;font:700 15px/1 sans-serif;letter-spacing:-1px}.brand small{font-size:11px;color:var(--muted);font-weight:500;display:block;letter-spacing:0;line-height:1.3}.topnav{display:flex;align-items:center;gap:22px}.topnav a{font-size:13px;color:#354762;font-weight:600}.github{display:inline-flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--edge);border-radius:12px;padding:7px 12px;color:var(--ink);font-size:13px}
+    .wrap{max-width:1230px;margin:auto;padding:0 26px 70px}.hero{padding:66px 0 56px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;gap:42px}.eyebrow{font-size:12px;font-weight:800;color:#986036;letter-spacing:.3px}.eyebrow i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#eea663;margin-left:5px}
+    h1{font-size:clamp(36px,4.2vw,62px);line-height:1.4;letter-spacing:-1.4px;margin:9px 0 14px;font-weight:900}.h-accent{color:#df7936}h2{font-size:clamp(24px,2.5vw,34px);line-height:1.5;margin:0 0 9px;letter-spacing:-.4px}h3{font-size:18px;margin:0}.lead{font-size:16px;color:#53657d;max-width:650px;margin:0 0 26px}.actions{display:flex;align-items:center;gap:11px;flex-wrap:wrap}.primary,.secondary{border-radius:13px;padding:11px 18px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:8px}.primary{background:#203d69;color:#fff}.primary:hover{background:#325583;color:#fff;text-decoration:none}.secondary{border:1px solid #d8e1ee;background:#fff;color:#263d5d}.secondary:hover{text-decoration:none;border-color:#a8bcda}.fine{margin-top:19px;color:#8693a5;font-size:12px}
+    .visual{background:#fff;border:1px solid #e3ebf5;border-radius:26px;padding:22px;box-shadow:var(--shadow);min-height:325px;position:relative;overflow:hidden}.visual:before{content:"";position:absolute;width:210px;height:210px;left:-110px;top:-120px;background:#f5d7bb;filter:blur(80px);opacity:.75}.visual-head{display:flex;align-items:center;gap:7px;border-bottom:1px solid #edf1f7;padding-bottom:12px;color:#8290a2;font:12px/1.5 sans-serif;direction:ltr}.dot{width:9px;height:9px;border-radius:50%;background:#f89c8e}.dot:nth-child(2){background:#f2d181}.dot:nth-child(3){background:#8dd0b1}.visual-hint{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:19px;font-size:12px;color:#73829a}.visual-hint span:first-child{color:#25508b;font-weight:700}.map{width:100%;height:auto;position:relative;display:block;margin:19px auto 8px;max-width:450px}.stats{display:flex;gap:9px;margin-top:5px;flex-wrap:wrap}.stats span{background:#f1f5fa;border:1px solid #e7edf5;color:#4a627e;padding:4px 10px;border-radius:99px;font-size:11px}
+    .layout{display:grid;grid-template-columns:245px 1fr;gap:35px;align-items:start}.rail{position:sticky;top:90px;padding:17px 13px;background:#fff;border:1px solid var(--edge);border-radius:18px;box-shadow:0 8px 30px rgba(24,39,61,.02)}.rail-title{font-size:12px;color:#94a1b1;font-weight:700;padding:6px 11px}.rail a{display:flex;padding:9px 11px;border-radius:10px;color:#5c6f88;font-size:13px;font-weight:650;gap:10px;align-items:center}.rail a:hover{background:#f4f7fc;color:#163b72;text-decoration:none}.rail .num{width:24px;height:24px;border-radius:8px;background:#eef3fa;color:#597398;display:grid;place-items:center;font:700 11px/1 sans-serif}.rail-note{margin:16px 7px 4px;border-top:1px solid var(--edge);padding:12px 5px 0;font-size:11px;color:#99a6b4}
+    main section{margin:0 0 32px;scroll-margin-top:96px}.section-head{margin-bottom:18px}.kicker{color:#d3834b;font-size:12px;font-weight:800;margin-bottom:5px}.section-desc{color:var(--muted);margin:0;font-size:14px}.panel{background:#fff;border:1px solid var(--edge);border-radius:var(--radius);padding:24px;box-shadow:0 4px 25px rgba(23,49,82,.025);margin-bottom:12px}
+    .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini{border:1px solid #e5ecf4;background:#fbfcfe;border-radius:14px;padding:14px}.mini strong{display:block;font-size:13px}.mini span{font-size:12px;color:#76859a}
+    .notice{background:#fff8f0;border:1px solid #f6dfc9;color:#735337;border-radius:13px;padding:13px 16px;font-size:13px;margin-top:15px}.notice.cool{background:#f2f7ff;border-color:#dce9f9;color:#3b587a}.notice strong{color:#583c26}
+    .codehead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 8px}.codehead strong{font-size:13px}.copy{border:1px solid #dbe3ef;background:#fff;border-radius:9px;padding:5px 11px;color:#325a91;font-weight:750;font-size:12px;line-height:1.6}.copy:hover{background:#edf4ff}.codeblock{margin:0;background:#17283e;color:#e3edf8;border-radius:13px;padding:17px;overflow-x:auto;white-space:pre;direction:ltr;text-align:left;font:12px/1.85 "Cascadia Code","Consolas",monospace;tab-size:2}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}.field label{font-size:12px;font-weight:800;display:block;margin-bottom:6px}.field input{direction:ltr;text-align:left;width:100%;border:1px solid #d8e2f0;border-radius:11px;padding:11px 13px;background:#fff;font:12px "Consolas",monospace;color:#203752;outline:none}.field input:focus{border-color:#6a96d5;box-shadow:0 0 0 3px #dceafd}.subtle{font-size:12px;color:#8390a3}.cta-row{display:flex;align-items:center;justify-content:space-between;gap:13px;margin-top:14px;flex-wrap:wrap}
+    .finder-results{margin-top:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f7fb;color:#415776;border:1px solid #dfe6ef;border-radius:12px;padding:12px;min-height:48px;direction:ltr;text-align:left;font:12px/1.9 "Consolas",monospace}.finder-results:empty{display:none}
+    .prompt-card{padding:0;overflow:hidden;margin-bottom:13px}.prompt-top{padding:19px 22px;display:flex;align-items:flex-start;gap:14px}.step{background:#edf4ff;color:#41649d;width:38px;height:38px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;font-weight:900;font:800 13px/38px sans-serif;text-align:center}.prompt-text{flex:1}.prompt-text p{font-size:13px;color:#77869b;margin:3px 0 0}.prompt-top .copy{align-self:center;white-space:nowrap}.prompt-card details summary{list-style:none;font-size:12px;cursor:pointer;color:#5578a5;background:#f8fbfe;padding:12px 21px;border-top:1px solid #edf0f6;font-weight:750}.prompt-card details summary::-webkit-details-marker{display:none}.prompt-card details summary:before{content:"⌄";margin-left:7px}.prompt-card details[open] summary:before{content:"⌃"}.prompt-card pre{border-radius:0;margin:0;max-height:400px;overflow:auto}.prompt-card .small{color:#8190a5;font-size:12px;padding:10px 21px;margin:0}.prompt-card .small b{color:#52677d}
+    .faq details{padding:16px 20px;border-bottom:1px solid #edf1f6}.faq details:last-child{border:none}.faq summary{cursor:pointer;font-weight:750}.faq p{color:#61748a;font-size:13px;margin:7px 0 0}
+    footer{border-top:1px solid var(--edge);padding-top:25px;margin-top:30px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;color:#91a0b2}footer a{color:#56749b}
+    .toast{position:fixed;bottom:24px;left:24px;background:#173f70;color:#fff;padding:10px 18px;border-radius:12px;font-weight:700;font-size:13px;box-shadow:0 12px 30px #163b7240;opacity:0;transform:translateY(15px);transition:.2s;pointer-events:none;z-index:50}.toast.show{opacity:1;transform:none}
+    @media(max-width:950px){.hero{grid-template-columns:1fr}.visual{max-width:600px}.layout{grid-template-columns:1fr}.rail{position:static;display:flex;flex-wrap:wrap;gap:3px}.rail-title,.rail-note{display:none}.rail a{font-size:12px}.topnav{gap:10px}}
+    @media(max-width:680px){.wrap{padding:0 16px 50px}.topin{padding:11px 16px}.topnav a:not(.github){display:none}.hero{padding:37px 0 29px;gap:24px}h1{font-size:37px}.visual{min-height:0;padding:16px}.mini-grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.panel{padding:17px}.prompt-top{padding:17px 15px;gap:9px;flex-wrap:wrap}.prompt-top .copy{margin-right:auto}.codeblock{font-size:11px}.prompt-card pre{max-height:360px}h2{font-size:25px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+  </style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <a class="brand" href="#home" aria-label="بالای صفحه"><span class="mark">R/C</span><span>REA + Codex<small>راهنمای عملی و پرامپت‌های پروژه</small></span></a>
+    <nav class="topnav" aria-label="فهرست بالا"><a href="#setup">شروع</a><a href="#asar">فایل ASAR</a><a href="#prompts">پرامپت‌ها</a><a href="#help">رفع خطا</a><a class="github" href="https://github.com/pouramin/REA-Codex" target="_blank" rel="noopener">GitHub ↗</a></nav>
+  </div>
+</header>
+<div class="wrap" id="home">
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><i></i> راهنمای همراه ویدیوی TunnelLab</div>
+      <h1>از مهندسی معکوس<br>تا <span class="h-accent">ساخت برنامه</span></h1>
+      <p class="lead">آموزش قدم‌به‌قدم کار با <bdi>REA</bdi> و <bdi>Codex</bdi>؛ از پیدا کردن فایل <bdi>app.asar</bdi> و اتصال ابزارها تا تحلیل مستند، پیاده‌سازی مستقل و تست برنامه.</p>
+      <div class="actions"><a class="primary" href="#setup">شروع راهنما ←</a><a class="secondary" href="#prompts">مشاهدهٔ پرامپت‌ها</a></div>
+      <p class="fine">رایگان · بدون حساب کاربری برای این صفحه · مسیرها فقط در مرورگر خودت پردازش می‌شن</p>
+    </div>
+    <div class="visual" aria-label="نمونه نقشه ذهنی ساخته‌شده">
+      <div class="visual-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span style="margin-left:14px">Mind-map case study</span></div>
+      <div class="visual-hint"><span>Investigate → Rebuild</span><span>REA + Codex</span></div>
+      <svg class="map" viewBox="0 0 460 245" role="img" aria-label="نقشه ذهنی نمونه با شاخه‌های تحلیل، پیاده‌سازی و تست">
+        <g fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M225 121 C165 121 179 54 135 54" stroke="#66b7c7"/><path d="M225 121 C166 121 174 186 135 186" stroke="#e6aa62"/><path d="M225 121 C301 121 290 54 329 54" stroke="#83abdf"/><path d="M225 121 C294 121 298 186 329 186" stroke="#9a9adf"/></g>
+        <rect x="166" y="95" rx="13" width="128" height="50" fill="#243f70"/><text x="230" y="124" fill="#fff" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" font-weight="bold">REA + Codex</text>
+        <rect x="13" y="35" width="125" height="37" rx="10" fill="#dff5f1"/><text x="76" y="58" fill="#244c51" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">Investigation</text>
+        <rect x="13" y="166" width="125" height="37" rx="10" fill="#fff0d9"/><text x="76" y="189" fill="#75583a" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">Evidence</text>
+        <rect x="323" y="35" width="125" height="37" rx="10" fill="#e3eefc"/><text x="385" y="58" fill="#314a72" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">Implementation</text>
+        <rect x="323" y="166" width="125" height="37" rx="10" fill="#eeecfd"/><text x="385" y="189" fill="#51477f" text-anchor="middle" font-family="Arial,sans-serif" font-size="12">Validation</text>
+      </svg>
+      <div class="stats"><span>پرامپت‌های قابل‌کپی</span><span>راهنمای ASAR</span><span>تست واقعی</span></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="rail" aria-label="بخش‌های راهنما">
+      <div class="rail-title">مسیر یادگیری</div>
+      <a href="#setup"><span class="num">01</span> آماده‌سازی و نصب</a>
+      <a href="#asar"><span class="num">02</span> پیدا کردن ASAR</a>
+      <a href="#workspace"><span class="num">03</span> شخصی‌سازی مسیرها</a>
+      <a href="#prompts"><span class="num">04</span> پرامپت‌های Codex</a>
+      <a href="#help"><span class="num">05</span> رفع خطاهای MCP</a>
+      <a href="#faq"><span class="num">06</span> پرسش‌های متداول</a>
+      <div class="rail-note">این پروژه نمونه‌ای آموزشی از تحلیل مجاز و ساخت یک برنامهٔ مستقل است؛ نه استخراج کامل سورس برنامهٔ اصلی.</div>
+    </aside>
+
+    <main>
+      <section id="setup">
+        <div class="section-head"><div class="kicker">مرحله 01</div><h2>آماده‌سازی و نصب</h2><p class="section-desc">روی ویندوز، Node.js و Codex محلی رو آماده کن. بعد REA رو مستقیماً به Codex متصل کن.</p></div>
+        <div class="panel">
+          <div class="mini-grid">
+            <div class="mini"><strong>Node.js</strong><span>برای اجرای REA با npx</span></div>
+            <div class="mini"><strong>Codex</strong><span>ایجنت محلی با دسترسی به پروژه</span></div>
+            <div class="mini"><strong>REA</strong><span>ابزار مهندسی معکوس و MCP</span></div>
+          </div>
+          <div class="codehead"><strong>بررسی پیش‌نیازها</strong><button class="copy" data-copy="check-code">کپی دستور</button></div>
+          <pre class="codeblock" id="check-code">node -v
+npm -v</pre>
+          <div class="codehead"><strong>نصب اتصال REA به Codex</strong><button class="copy" data-copy="setup-code">کپی دستور</button></div>
+          <pre class="codeblock" id="setup-code">npx.cmd rea-agents@latest setup --client codex
+npx.cmd -y rea-agents@latest doctor --client codex --json</pre>
+          <div class="notice cool">بعد از نصب، Codex رو کاملاً ببند و دوباره باز کن. نتیجهٔ <bdi>healthy: true</bdi> فقط ثبت تنظیمات رو تأیید می‌کنه؛ اتصال واقعی MCP باید داخل خود Codex تست بشه.</div>
+          <p class="subtle">در Codex Desktop لازم نیست حتماً دستور <bdi>codex</bdi> در PowerShell نصب شده باشه. برای تحلیل جاوااسکریپتی یک بستهٔ Electron هم معمولاً موتورهای اختیاری تحلیل باینری مانند Ghidra لازم نیست.</p>
+        </div>
+      </section>
+
+      <section id="asar">
+        <div class="section-head"><div class="kicker">مرحله 02</div><h2>فایل <bdi>app.asar</bdi> رو پیدا کن</h2><p class="section-desc">بسیاری از برنامه‌های Electron فایل‌های برنامه رو در بسته‌های <bdi>.asar</bdi> نگه می‌دارن. همهٔ نرم‌افزارها چنین فایلی ندارن.</p></div>
+        <div class="panel">
+          <h3>روش ساده: دستور ویندوز</h3>
+          <p class="section-desc">ابتدا محل‌های رایج نصب Xmind رو بررسی کن:</p>
+          <div class="codehead"><strong>جست‌وجوی مسیرهای معمول Xmind</strong><button class="copy" data-copy="asar-quick">کپی دستور</button></div>
+          <pre class="codeblock" id="asar-quick">$paths = @(
+  "$env:LOCALAPPDATA\Programs\Xmind\resources\app.asar"
+  (Join-Path $env:ProgramFiles 'Xmind\resources\app.asar')
+  (Join-Path ([Environment]::GetFolderPath('ProgramFilesX86')) 'Xmind\resources\app.asar')
+)
+$paths | Where-Object { Test-Path -LiteralPath $_ }</pre>
+          <p class="section-desc" style="margin-top:17px">برای پیدا کردن بسته‌های <bdi>.asar</bdi> برنامه‌های مختلف در مسیرهای نصب رایج، از این دستور استفاده کن. ممکنه چند دقیقه طول بکشه:</p>
+          <div class="codehead"><strong>پیدا کردن فایل‌های ASAR در مسیرهای رایج</strong><button class="copy" data-copy="asar-search">کپی دستور</button></div>
+          <pre class="codeblock" id="asar-search">$roots = @(
+  (Join-Path $env:LOCALAPPDATA 'Programs')
+  $env:ProgramFiles
+  ([Environment]::GetFolderPath('ProgramFilesX86'))
+) | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -Unique
+
+foreach ($root in $roots) {
+  Get-ChildItem -LiteralPath $root -Filter *.asar -File -Recurse -ErrorAction SilentlyContinue |
+    Select-Object -ExpandProperty FullName
+}</pre>
+          <div class="notice">فایل <bdi>app.asar</bdi> یا پوشهٔ نصب برنامه رو فقط برای مطالعهٔ مجاز بررسی کن. فایل‌ها و دارایی‌های اختصاصی دیگران رو بدون مجوز منتشر نکن.</div>
+        </div>
+        <div class="panel">
+          <h3>روش مرورگری: انتخاب پوشه</h3>
+          <p class="section-desc">در Chrome یا Edge می‌تونی پوشهٔ نصب رو خودت انتخاب کنی. صفحه فقط اسم و مسیر نسبی فایل‌های <bdi>.asar</bdi> رو می‌بینه؛ آدرس کامل درایو رو مرورگر در اختیار سایت نمی‌ذاره.</p>
+          <div class="cta-row"><button id="pick-folder" class="secondary" type="button">انتخاب پوشهٔ نصب و پیدا کردن ASAR</button><span class="subtle">پردازش محلی؛ بدون آپلود فایل</span></div>
+          <div class="finder-results" id="finder-results" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="workspace">
+        <div class="section-head"><div class="kicker">مرحله 03</div><h2>پرامپت‌ها رو برای پروژهٔ خودت تنظیم کن</h2><p class="section-desc">این 2 مسیر به‌صورت خودکار در تمام پرامپت‌های پایین جایگزین می‌شن. برای نمونه، آدرس‌های خودت رو وارد کن.</p></div>
+        <div class="panel">
+          <div class="controls">
+            <div class="field"><label for="workspace-input">مسیر پوشهٔ پروژه</label><input id="workspace-input" dir="ltr" spellcheck="false" value="C:\REA-Codex\My-Project" placeholder="C:\REA-Codex\My-Project"></div>
+            <div class="field"><label for="asar-input">مسیر فایل ASAR</label><input id="asar-input" dir="ltr" spellcheck="false" value="C:\Users\YOUR_USER\AppData\Local\Programs\Xmind\resources\app.asar" placeholder="C:\...\resources\app.asar"></div>
+          </div>
+          <p class="subtle">مسیرها جایی ارسال یا ذخیره نمی‌شن. با تغییر هر فیلد، متن همهٔ پرامپت‌ها بلافاصله به‌روز می‌شه.</p>
+        </div>
+      </section>
+
+      <section id="prompts">
+        <div class="section-head"><div class="kicker">مرحله 04</div><h2>پرامپت‌های کامل Codex</h2><p class="section-desc">به ترتیب بفرست. متن انگلیسی پرامپت‌ها برای اجرای دقیق‌تر دستورهاست؛ توضیح‌ها فارسیه.</p></div>
+
+        <article class="panel prompt-card"><div class="prompt-top"><span class="step">01</span><div class="prompt-text"><h3>تنظیم پروژه و تست اتصال واقعی REA</h3><p>اولین پرامپت؛ بدون شروع تحلیل سنگین.</p></div><button class="copy" data-prompt-copy="preflight">کپی پرامپت</button></div><details open><summary>نمایش متن کامل</summary><pre class="codeblock" data-prompt-output="preflight"></pre></details><p class="small">انتظار: مسیرها تأیید بشن و حداقل <b>یک فراخوانی واقعی</b> از ابزار REA موفق باشه.</p></article>
+        <article class="panel prompt-card"><div class="prompt-top"><span class="step">02</span><div class="prompt-text"><h3>تحلیل هدفمند برنامه و ثبت شواهد</h3><p>به‌جای پردازش یکجای هزاران فایل، بخش‌های مرتبط رو پیدا می‌کنه.</p></div><button class="copy" data-prompt-copy="investigate">کپی پرامپت</button></div><details><summary>نمایش متن کامل</summary><pre class="codeblock" data-prompt-output="investigate"></pre></details><p class="small">انتظار: معماری، شواهد قابلیت‌ها، برنامهٔ پیاده‌سازی و محدودیت‌ها.</p></article>
+        <article class="panel prompt-card"><div class="prompt-top"><span class="step">03</span><div class="prompt-text"><h3>ساخت نسخهٔ مستقل قابل‌اجرا برای ویندوز</h3><p>تبدیل یافته‌ها به یک برنامهٔ مستقل، بدون کپی سورس اختصاصی.</p></div><button class="copy" data-prompt-copy="build">کپی پرامپت</button></div><details><summary>نمایش متن کامل</summary><pre class="codeblock" data-prompt-output="build"></pre></details><p class="small">انتظار: پروژهٔ Electron، تست‌ها و برنامهٔ بسته‌بندی‌شده.</p></article>
+        <article class="panel prompt-card"><div class="prompt-top"><span class="step">04</span><div class="prompt-text"><h3>تست و مقایسهٔ عملکرد واقعی</h3><p>تفاوت یافته‌های REA با کدنویسی مستقل رو روشن می‌کنه.</p></div><button class="copy" data-prompt-copy="validate">کپی پرامپت</button></div><details><summary>نمایش متن کامل</summary><pre class="codeblock" data-prompt-output="validate"></pre></details><p class="small">تست‌های اجرا نشده باید <b>NOT TESTED</b> ثبت بشن، نه PASS.</p></article>
+        <article class="panel prompt-card"><div class="prompt-top"><span class="step">05</span><div class="prompt-text"><h3>گزارش نهایی مناسب انتشار ویدیو</h3><p>روایت مستند از اینکه ابزار واقعاً چه کاری انجام داده.</p></div><button class="copy" data-prompt-copy="final">کپی پرامپت</button></div><details><summary>نمایش متن کامل</summary><pre class="codeblock" data-prompt-output="final"></pre></details></article>
+      </section>
+
+      <section id="help">
+        <div class="section-head"><div class="kicker">مرحله 05</div><h2>اگر اتصال MCP خطا داد</h2><p class="section-desc">حتی وقتی نصب سالم گزارش می‌شه، ممکنه سرور MCP موقع شروع بسته بشه.</p></div>
+        <div class="panel">
+          <h3>اول خطای واقعی رو مشخص کن</h3>
+          <div class="codehead"><strong>بررسی وضعیت ثبت اتصال</strong><button class="copy" data-copy="doctor-code">کپی دستور</button></div>
+          <pre class="codeblock" id="doctor-code">npx.cmd -y rea-agents@latest doctor --client codex --json</pre>
+          <p class="section-desc" style="margin-top:14px">اگر ابزارها هنوز دیده نمی‌شن، Codex رو کامل ببند و دوباره اجرا کن. در صورت تکرار خطا، پرامپت عیب‌یابی زیر رو به Codex بده:</p>
+          <div class="codehead"><strong>پرامپت عیب‌یابی اتصال</strong><button class="copy" data-prompt-copy="diagnose">کپی پرامپت</button></div>
+          <pre class="codeblock" data-prompt-output="diagnose"></pre>
+          <div class="notice cool">در آزمایش این ویدیو، یک نسخهٔ ناقص REA داخل کش npm با خطای <bdi>Cannot find module 'which'</bdi> باعث بسته‌شدن سرور شد. راه‌حل مناسب پس از تشخیص، استفاده از مسیر دقیق یک نسخهٔ سالم بود؛ مسیر کش هر کامپیوتر فرق داره و نباید حدسی کپی بشه.</div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="section-head"><div class="kicker">پرسش‌های رایج</div><h2>چند نکتهٔ مهم</h2></div>
+        <div class="panel faq" style="padding:0">
+          <details><summary>آیا این صفحه می‌تونه کل کامپیوترم رو برای ASAR جست‌وجو کنه؟</summary><p>نه. وب‌سایت بدون اجازه به فایل‌های سیستم دسترسی نداره. انتخابگر پوشه فقط محتوای پوشه‌ای رو بررسی می‌کنه که خودت انتخاب کنی. برای جست‌وجوی مسیرهای معمول نصب، از پاورشل استفاده کن.</p></details>
+          <details><summary>چرا ممکنه نرم‌افزار من فایل ASAR نداشته باشه؟</summary><p>ASAR قالب رایج بسته‌بندی برنامه‌های Electron هست، نه یک استاندارد همگانی برای تمام برنامه‌ها. برنامه‌های بومی ویندوز یا بعضی بسته‌بندی‌های دیگر ممکنه ASAR نداشته باشن.</p></details>
+          <details><summary>آیا REA تمام سورس‌کد برنامه رو بازیابی می‌کنه؟</summary><p>خیر. فهرست‌برداری، تحلیل فایل‌های انتخاب‌شده و استنتاج رفتار با بازیابی کامل سورس اصلی تفاوت دارن. محدودیت‌ها باید در گزارش نهایی مشخص باشن.</p></details>
+          <details><summary>آیا پروژه‌ای که Codex می‌سازه همان برنامهٔ اصلیه؟</summary><p>خیر. هدف ساخت یک پیاده‌سازی مستقل با برخی قابلیت‌های مشابه و ارزیابی مستند تفاوت‌هاست؛ نه کپی مستقیم نرم‌افزار اصلی.</p></details>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer><span>ساخته‌شده برای همراهی با ویدیوی TunnelLab — راهنمای آموزشی، نه وابسته به سازندگان ابزارها.</span><span><a href="https://github.com/pouramin/REA-Codex" target="_blank" rel="noopener">مخزن GitHub</a> · <a href="https://rea.tools/" target="_blank" rel="noopener">REA</a> · <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex</a></span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite">کپی شد ✓</div>
+
+<template id="preflight">We are starting a controlled, evidence-based reverse-engineering experiment.
+
+PROJECT WORKSPACE:
+{{WORKSPACE}}
+
+TARGET ASAR:
+{{TARGET_ASAR}}
+
+RULES:
+- Use this workspace for all generated reports, code, and build artifacts.
+- The original installed application is read-only; do not modify it.
+- Do not reuse investigation files from unrelated projects.
+- Do not download proprietary source code or an existing clone.
+- Do not copy proprietary code, graphics, or branding.
+- Distinguish verified REA findings from assumptions.
+- Respect applicable licenses and local law.
+
+FIRST TASK ONLY:
+1. Confirm the working directory and target ASAR path.
+2. Verify Node.js and required development tools.
+3. Confirm REA MCP tools are available in THIS Codex session.
+4. Invoke one small, read-only REA tool to prove the connection actually works.
+5. Create directories inside the workspace: original-test, analysis, reports, rebuild, delivery.
+6. Report the actual tool calls, results, and any blockers.
+
+Do not start full analysis or implementation yet.
+Stop after the checks and wait for my next instruction.</template>
+
+<template id="investigate">Now begin the REA-powered investigation of the installed Electron application.
+
+WORKSPACE:
+{{WORKSPACE}}
+
+TARGET PACKAGE:
+{{TARGET_ASAR}}
+
+GOAL:
+Understand the architecture and core user-facing functionality using verified, permitted local evidence. Prepare an independent implementation plan.
+
+RULES:
+- Use REA MCP tools, not unsupported claims about what REA discovered.
+- Inventory the package and identify relevant, supported inputs and entry points.
+- Do NOT request one enormous analysis of thousands of files.
+- Narrow analysis to relevant files and features, incrementally.
+- If capacity or resource limits occur, reduce scope instead of repeating oversized calls.
+- Record precise evidence and separate facts, inferences, and unknowns.
+- Do not modify the original package.
+- Do not retrieve proprietary source code or an existing clone from the internet.
+- Do not redistribute proprietary code or assets.
+
+INVESTIGATE, WHERE APPLICABLE:
+1. Document creation and structure
+2. Adding, removing, and editing nodes/topics
+3. Hierarchy and state transitions
+4. Rendering, connections, and automatic layout
+5. Mouse interaction, dragging, zooming, and panning
+6. Styling
+7. Local save and load
+8. Application boundaries and inaccessible code
+
+OUTPUT INSIDE THE WORKSPACE:
+reports/architecture.md
+reports/feature-evidence.md
+reports/implementation-plan.md
+reports/limitations.md
+analysis/coverage-summary.md
+
+The coverage summary must distinguish INVENTORIED files from ACTUALLY ANALYZED files and list skipped/unsupported inputs.
+
+Stop once there is enough verified evidence to plan an independent implementation. Summarize your findings and do NOT start building yet.</template>
+
+<template id="build">The REA investigation is complete. Build an independently implemented Windows desktop application based on the verified findings and the implementation plan.
+
+WORKSPACE:
+{{WORKSPACE}}
+
+FIRST READ:
+reports/architecture.md
+reports/feature-evidence.md
+reports/implementation-plan.md
+reports/limitations.md
+analysis/coverage-summary.md
+
+DIRECTORIES:
+- Editable source: rebuild/
+- Packaged Windows application: delivery/
+
+IMPLEMENTATION GOALS (ADAPT TO EVIDENCE):
+- A functional Electron + TypeScript desktop application
+- Original, maintainable document/data model
+- Create, edit, delete, reorder, and nest topics
+- SVG connections and readable automatic layout
+- Mouse dragging, zoom, and panning
+- Topic styling and keyboard shortcuts
+- Undo/redo
+- Local offline save/load using an independent document format
+- Clean, practical desktop UI
+
+RULES:
+- Use verified REA evidence where possible; implement missing pieces independently.
+- Do not copy proprietary source code, icons, assets, or branding.
+- Do not download a finished clone as a shortcut.
+- Never modify the original installed application.
+- Keep controllable build outputs inside the workspace.
+- Common maintained development dependencies are allowed.
+- Do not deliver a static mockup and call it a finished app.
+
+VALIDATION:
+1. Create the project and implement features.
+2. Run TypeScript build and fix compile/runtime errors.
+3. Add automated tests for state operations and persistence.
+4. Run GUI checks where technically possible.
+5. Package a runnable Windows application.
+6. Explain any incomplete or untested features.
+
+REPORT:
+- Exact executable path
+- Successful tests and their evidence
+- Incomplete or untested features
+- Which features were REA-evidence-derived versus independently designed
+
+Continue through implementation and testing. Request my intervention for permission or a concrete blocker only.</template>
+
+<template id="validate">Evaluate the rebuilt desktop application against the original application's observable behavior.
+
+WORKSPACE:
+{{WORKSPACE}}
+
+ORIGINAL TARGET:
+{{TARGET_ASAR}}
+
+TEST:
+1. Create a new document/mind map.
+2. Add, edit, remove, and reorder topics.
+3. Create several nested topics.
+4. Change colors and formatting.
+5. Drag and reposition topics; test zoom and pan.
+6. Test undo and redo.
+7. Save, close, reopen, and verify persistence.
+8. Launch the PACKAGED executable (not just the development server).
+
+FOR EVERY TEST:
+- PASS / FAIL / NOT TESTED
+- Expected versus actual behavior
+- Evidence and relevant limitations
+
+IMPORTANT:
+- Do not invent GUI test results.
+- Native dialogs, Persian/IME text input, scaling, and large documents require real checks when possible.
+- If GUI automation is unavailable, mark NOT TESTED and give clear manual instructions.
+- Do not modify the original application.
+
+SEPARATE IN THE REPORT:
+A. Behavior backed by verified REA evidence
+B. Behavior independently implemented
+C. Missing, inaccessible, or untested behavior
+
+Fix reproducible defects where possible. Save final-report.md inside the workspace.</template>
+
+<template id="final">Prepare an accurate, public-facing summary of this REA + Codex experiment.
+
+WORKSPACE:
+{{WORKSPACE}}
+
+Review the architecture, evidence, coverage, implementation and test reports.
+
+Create reports/youtube-summary.md covering:
+1. What REA actually inspected and verified.
+2. How many files were inventoried versus deeply analyzed.
+3. What Codex implemented independently.
+4. The final executable and tested functionality.
+5. Missing features, untested behaviors, and important limitations.
+6. A short, honest conclusion suitable for a YouTube video description.
+
+Avoid exaggerated claims such as "fully recovered original source code" or "reverse engineered every file".
+Do not change the application or upload proprietary assets.</template>
+
+<template id="diagnose">Diagnose this REA MCP startup problem on Windows.
+
+WORKSPACE:
+{{WORKSPACE}}
+
+The Codex MCP registration may be healthy even when the live server fails its initialize handshake.
+
+TASK:
+1. Read the existing Codex MCP registration without modifying it.
+2. Reproduce the configured REA launcher independently.
+3. Capture stderr, exit code, and a valid MCP initialize response or error.
+4. Check the Node.js/npx paths and whether cached dependencies are complete.
+5. Identify the smallest verified fix (for example, a tested direct Node entrypoint).
+6. Do not guess npm cache paths or modify configuration without approval.
+7. Do not reinstall, clear caches, or analyze the target until the cause is known.
+
+Save evidence in reports/rea-mcp-diagnosis.md and summarize the proven cause and proposed fix.</template>
+
+<script>
+(function(){
+  'use strict';
+  var inputs = {workspace:document.getElementById('workspace-input'),asar:document.getElementById('asar-input')};
+  var toast=document.getElementById('toast');var toastTimer;
+  function showToast(message){toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toast.classList.remove('show');},2100);}
+  function promptText(id){var t=document.getElementById(id);if(!t)return '';return t.textContent.trim().replace(/\{\{WORKSPACE\}\}/g,inputs.workspace.value.trim()).replace(/\{\{TARGET_ASAR\}\}/g,inputs.asar.value.trim());}
+  function renderPrompts(){document.querySelectorAll('[data-prompt-output]').forEach(function(el){el.textContent=promptText(el.getAttribute('data-prompt-output'));});}
+  inputs.workspace.addEventListener('input',renderPrompts);inputs.asar.addEventListener('input',renderPrompts);renderPrompts();
+  async function copy(text){try{await navigator.clipboard.writeText(text);showToast('کپی شد ✓');}catch(err){var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();var ok=document.execCommand('copy');area.remove();showToast(ok?'کپی شد ✓':'کپی انجام نشد؛ متن رو دستی انتخاب کن');}}
+  document.querySelectorAll('[data-copy]').forEach(function(btn){btn.addEventListener('click',function(){var el=document.getElementById(btn.getAttribute('data-copy'));copy(el?el.textContent.trim():'');});});
+  document.querySelectorAll('[data-prompt-copy]').forEach(function(btn){btn.addEventListener('click',function(){copy(promptText(btn.getAttribute('data-prompt-copy')));});});
+  var picker=document.getElementById('pick-folder');var result=document.getElementById('finder-results');
+  picker.addEventListener('click',async function(){
+    if(typeof window.showDirectoryPicker!=='function'){result.textContent='مرورگر شما انتخابگر پوشه را پشتیبانی نمی‌کند. از Chrome/Edge به‌روز یا دستور PowerShell بالا استفاده کنید.';return;}
+    try{
+      picker.disabled=true;picker.textContent='در حال بررسی پوشه…';result.textContent='لطفاً منتظر بمانید؛ فایل‌ها فقط در مرورگر شما بررسی می‌شوند.';
+      var dir=await window.showDirectoryPicker({mode:'read'});var found=[];var visited=0;var limited=false;
+      async function walk(handle,prefix,depth){
+        if(depth>12||visited>30000){limited=true;return;}
+        for await(var entry of handle.values()){
+          visited++;if(visited>30000){limited=true;return;}
+          var path=prefix+entry.name;
+          if(entry.kind==='file'&&/\.asar$/i.test(entry.name))found.push(path);
+          if(entry.kind==='directory'&&depth<12)await walk(entry,path+'/',depth+1);
+        }
+      }
+      await walk(dir,'',0);
+      if(found.length){result.textContent='پوشهٔ انتخاب‌شده: '+dir.name+'\n\nفایل‌های پیدا‌شده (مسیر نسبی):\n'+found.join('\n')+'\n\nبرای به‌دست‌آوردن آدرس کامل ویندوز، از نوار آدرس File Explorer یا دستور PowerShell استفاده کن.';}
+      else{result.textContent='در پوشهٔ انتخاب‌شده فایل ASAR پیدا نشد.';}
+      if(limited)result.textContent+='\n\nجست‌وجو به سقف 30,000 مورد یا عمق 12 پوشه رسید. برای پوشش کامل، پوشهٔ کوچک‌تری انتخاب کن.';
+    }catch(err){if(err&&err.name==='AbortError'){result.textContent='انتخاب پوشه لغو شد.';}else{result.textContent='خواندن پوشه امکان‌پذیر نشد: '+(err&&err.message?err.message:'دسترسی رد شد');}}
+    finally{picker.disabled=false;picker.textContent='انتخاب پوشهٔ نصب و پیدا کردن ASAR';}
+  });
+})();
+</script>
+</body>
+</html>

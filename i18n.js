@@ -172,7 +172,17 @@
     }
   }
   let language = "en";
-  const t = english => language === "fa" ? (dynamic[english] ?? fa[english] ?? english) : english;
+  const t = english => {
+    if (language !== "fa") return english;
+    if (Object.prototype.hasOwnProperty.call(dynamic, english)) return dynamic[english];
+    if (Object.prototype.hasOwnProperty.call(fa, english)) return fa[english];
+    // Finder results include variable filenames. Translate the fixed message segments only.
+    let translated = english;
+    for (const [original, localText] of Object.entries(dynamic)) {
+      if (original && translated.includes(original)) translated = translated.split(original).join(localText);
+    }
+    return translated;
+  };
   window.siteTranslate = t;
   function switchLanguage(nextLanguage) {
     language = nextLanguage === "fa" ? "fa" : "en";

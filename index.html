@@ -405,7 +405,7 @@ Save evidence in reports/rea-mcp-diagnosis.md and summarize the proven cause and
   var inputs = {workspace:document.getElementById('workspace-input'),asar:document.getElementById('asar-input')};
   var toast=document.getElementById('toast');var toastTimer;
   function showToast(message){toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toast.classList.remove('show');},2100);}
-  function promptText(id){var t=document.getElementById(id);if(!t)return '';return t.textContent.trim().replace(/\{\{WORKSPACE\}\}/g,inputs.workspace.value.trim()).replace(/\{\{TARGET_ASAR\}\}/g,inputs.asar.value.trim());}
+  function promptText(id){var t=document.getElementById(id);if(!t)return '';return t.content.textContent.trim().replace(/\{\{WORKSPACE\}\}/g,inputs.workspace.value.trim()).replace(/\{\{TARGET_ASAR\}\}/g,inputs.asar.value.trim());}
   function renderPrompts(){document.querySelectorAll('[data-prompt-output]').forEach(function(el){el.textContent=promptText(el.getAttribute('data-prompt-output'));});}
   inputs.workspace.addEventListener('input',renderPrompts);inputs.asar.addEventListener('input',renderPrompts);renderPrompts();
   async function copy(text){try{await navigator.clipboard.writeText(text);showToast('کپی شد ✓');}catch(err){var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();var ok=document.execCommand('copy');area.remove();showToast(ok?'کپی شد ✓':'کپی انجام نشد؛ متن رو دستی انتخاب کن');}}

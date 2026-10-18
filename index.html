@@ -126,6 +126,9 @@ foreach ($root in $roots) {
   Get-ChildItem -LiteralPath $root -Filter *.asar -File -Recurse -ErrorAction SilentlyContinue |
     Select-Object -ExpandProperty FullName
 }</pre>
+          <div class="codehead"><strong>جست‌وجوی فایل با کمک Codex</strong><button class="copy" data-prompt-copy="locate">کپی پرامپت</button></div>
+          <pre class="codeblock" data-prompt-output="locate"></pre>
+          <p class="subtle">این پرامپت به Codex می‌گه فقط محل فایل رو پیدا کنه و قبل از شروع تحلیل متوقف بشه.</p>
           <div class="notice">فایل <bdi>app.asar</bdi> یا پوشهٔ نصب برنامه رو فقط برای مطالعهٔ مجاز بررسی کن. فایل‌ها و دارایی‌های اختصاصی دیگران رو بدون مجوز منتشر نکن.</div>
         </div>
         <div class="panel">
@@ -184,6 +187,22 @@ foreach ($root in $roots) {
   <footer><span>ساخته‌شده برای همراهی با ویدیوی TunnelLab — راهنمای آموزشی، نه وابسته به سازندگان ابزارها.</span><span><a href="https://github.com/pouramin/REA-Codex" target="_blank" rel="noopener">مخزن GitHub</a> · <a href="https://rea.tools/" target="_blank" rel="noopener">REA</a> · <a href="https://openai.com/codex/" target="_blank" rel="noopener">Codex</a></span></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite">کپی شد ✓</div>
+
+<template id="locate">Find the installed application's Electron ASAR package on this Windows computer.
+
+PROJECT WORKSPACE:
+{{WORKSPACE}}
+
+TASK:
+1. Ask me which installed application to inspect if its name is not clear.
+2. Look for app.asar or other .asar files under the application's resources directory.
+3. Search only likely application installation locations (for example LocalAppData/Programs and Program Files), not the entire disk.
+4. Do not modify files or install tools.
+5. Return the exact absolute file path, file size, and evidence that it belongs to the selected application.
+6. If multiple packages are found, list the candidates and explain the differences.
+7. If no ASAR exists, say the application may not use Electron/ASAR and stop.
+
+Do not start reverse engineering or extraction yet.</template>
 
 <template id="preflight">We are starting a controlled, evidence-based reverse-engineering experiment.
 

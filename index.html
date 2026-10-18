@@ -37,14 +37,29 @@
     @media(max-width:950px){.hero{grid-template-columns:1fr}.visual{max-width:600px}.layout{grid-template-columns:minmax(0,1fr)}.rail{position:static;display:flex;flex-wrap:wrap;gap:3px}.rail-title,.rail-note{display:none}.rail a{font-size:12px}.topnav{gap:10px}}
     @media(max-width:680px){.wrap{padding:0 16px 50px}.topin{padding:11px 16px}.topnav a:not(.github){display:none}.hero{padding:37px 0 29px;gap:24px}h1{font-size:37px}.visual{min-height:0;padding:16px}.mini-grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.panel{padding:17px}.prompt-top{padding:17px 15px;gap:9px;flex-wrap:wrap}.prompt-top .copy{margin-left:auto}.codeblock{font-size:11px}.prompt-card pre{max-height:360px}h2{font-size:25px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+  
+    /* Language switch: English LTR by default; Persian RTL on demand. */
+    .language-switch{border:1px solid #cddbeb;background:#fff;border-radius:11px;padding:7px 13px;color:#224778;font-size:13px;font-weight:800;white-space:nowrap;line-height:1.6;min-height:38px}
+    .language-switch:hover,.language-switch:focus-visible{background:#edf4ff;border-color:#85a6d4;outline-offset:3px}
+    .language-switch[lang=fa]{font-family:"Vazirmatn",Tahoma,sans-serif}
+    html[lang=fa] body{font-family:"Vazirmatn",Tahoma,sans-serif;line-height:1.95}
+    html[lang=fa] button{font-family:"Vazirmatn",Tahoma,sans-serif}
+    html[lang=fa] .prompt-top .copy{margin-right:auto;margin-left:0}
+    html[lang=fa] .eyebrow i{margin-right:0;margin-left:5px}
+    html[lang=fa] .prompt-card details summary:before{margin-right:0;margin-left:7px}
+    html[lang=fa] .codeblock,html[lang=fa] .field input,html[lang=fa] .finder-results{direction:ltr;text-align:left}
+    @media(max-width:550px){.topnav .github{display:none}.language-switch{padding:6px 10px}}
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="alternate" hreflang="en" href="https://pouramin.github.io/REA-Codex/">
+  <link rel="alternate" hreflang="fa" href="https://pouramin.github.io/REA-Codex/?lang=fa">
 </head>
 <body>
 <header class="top">
   <div class="topin">
     <a class="brand" href="#home" aria-label="Back to top"><span class="mark">R/C</span><span>REA + Codex<small>Hands-on guide & reusable prompts</small></span></a>
     <nav class="topnav" aria-label="Main navigation">
-      <a href="#setup">Getting started</a><a href="#asar">ASAR finder</a><a href="#prompts">Prompts</a><a href="#help">Troubleshooting</a>
+      <a href="#setup">Getting started</a><a href="#asar">ASAR finder</a><a href="#prompts">Prompts</a><a href="#help">Troubleshooting</a><button id="language-switch" class="language-switch" type="button" lang="fa" dir="rtl" aria-label="تغییر زبان به فارسی" aria-pressed="false">فارسی</button>
       <a class="github" href="https://github.com/pouramin/REA-Codex" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
     </nav>
   </div>
@@ -400,40 +415,121 @@ TASK:
 Save evidence in reports/rea-mcp-diagnosis.md and summarize the proven cause and proposed fix.</template>
 
 <script>
-(function(){
-  'use strict';
-  var inputs = {workspace:document.getElementById('workspace-input'),asar:document.getElementById('asar-input')};
-  var toast=document.getElementById('toast');var toastTimer;
-  function showToast(message){toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){toast.classList.remove('show');},2100);}
-  function promptText(id){var t=document.getElementById(id);if(!t)return '';return t.content.textContent.trim().replace(/\{\{WORKSPACE\}\}/g,inputs.workspace.value.trim()).replace(/\{\{TARGET_ASAR\}\}/g,inputs.asar.value.trim());}
-  function renderPrompts(){document.querySelectorAll('[data-prompt-output]').forEach(function(el){el.textContent=promptText(el.getAttribute('data-prompt-output'));});}
-  inputs.workspace.addEventListener('input',renderPrompts);inputs.asar.addEventListener('input',renderPrompts);renderPrompts();
-  async function copy(text){try{await navigator.clipboard.writeText(text);showToast('Copied ✓');}catch(err){var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();var ok=document.execCommand('copy');area.remove();showToast(ok?'Copied ✓':'Copy failed. Select the text and copy it manually.');}}
-  document.querySelectorAll('[data-copy]').forEach(function(btn){btn.addEventListener('click',function(){var el=document.getElementById(btn.getAttribute('data-copy'));copy(el?el.textContent.trim():'');});});
-  document.querySelectorAll('[data-prompt-copy]').forEach(function(btn){btn.addEventListener('click',function(){copy(promptText(btn.getAttribute('data-prompt-copy')));});});
-  var picker=document.getElementById('pick-folder');var result=document.getElementById('finder-results');
-  picker.addEventListener('click',async function(){
-    if(typeof window.showDirectoryPicker!=='function'){result.textContent='Your browser does not support folder selection. Try an updated Chrome/Edge browser or the PowerShell commands above.';return;}
-    try{
-      picker.disabled=true;picker.textContent='Scanning folder…';result.textContent='Please wait. The scan runs locally in your browser.';
-      var dir=await window.showDirectoryPicker({mode:'read'});var found=[];var visited=0;var limited=false;
-      async function walk(handle,prefix,depth){
-        if(depth>12||visited>30000){limited=true;return;}
-        for await(var entry of handle.values()){
-          visited++;if(visited>30000){limited=true;return;}
-          var path=prefix+entry.name;
-          if(entry.kind==='file'&&/\.asar$/i.test(entry.name))found.push(path);
-          if(entry.kind==='directory'&&depth<12)await walk(entry,path+'/',depth+1);
+(function () {
+  "use strict";
+  const inputs = {
+    workspace: document.getElementById("workspace-input"),
+    asar: document.getElementById("asar-input")
+  };
+  const toast = document.getElementById("toast");
+  const picker = document.getElementById("pick-folder");
+  const result = document.getElementById("finder-results");
+  let toastTimer;
+  let lastToast = null;
+  let finderMessage = null;
+
+  function tr(text) {
+    return typeof window.siteTranslate === "function" ? window.siteTranslate(text) : text;
+  }
+  function showToast(message) {
+    lastToast = message;
+    toast.textContent = tr(message);
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2100);
+  }
+  function promptText(id) {
+    const template = document.getElementById(id);
+    if (!template || !template.content) return "";
+    return template.content.textContent.trim()
+      .replace(/\{\{WORKSPACE\}\}/g, inputs.workspace.value.trim())
+      .replace(/\{\{TARGET_ASAR\}\}/g, inputs.asar.value.trim());
+  }
+  function renderPrompts() {
+    document.querySelectorAll("[data-prompt-output]").forEach(el => {
+      el.textContent = promptText(el.getAttribute("data-prompt-output"));
+    });
+  }
+  inputs.workspace.addEventListener("input", renderPrompts);
+  inputs.asar.addEventListener("input", renderPrompts);
+  renderPrompts();
+
+  async function copy(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("Copied ✓");
+    } catch (_) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      const success = document.execCommand("copy");
+      area.remove();
+      showToast(success ? "Copied ✓" : "Copy failed. Select the text and copy it manually.");
+    }
+  }
+  document.querySelectorAll("[data-copy]").forEach(btn => btn.addEventListener("click", () => {
+    const el = document.getElementById(btn.getAttribute("data-copy"));
+    copy(el ? el.textContent.trim() : "");
+  }));
+  document.querySelectorAll("[data-prompt-copy]").forEach(btn => btn.addEventListener("click", () => {
+    copy(promptText(btn.getAttribute("data-prompt-copy")));
+  }));
+
+  function setFinderMessage(message) {
+    finderMessage = message;
+    result.textContent = tr(message);
+  }
+  function refreshPickerLabel() {
+    picker.textContent = tr(picker.disabled ? "Scanning folder…" : "Select a folder & find ASAR files");
+  }
+  window.siteRefreshDynamic = function () {
+    if (finderMessage !== null) result.textContent = tr(finderMessage);
+    if (lastToast !== null) toast.textContent = tr(lastToast);
+    refreshPickerLabel();
+  };
+
+  picker.addEventListener("click", async () => {
+    if (typeof window.showDirectoryPicker !== "function") {
+      setFinderMessage("Your browser does not support folder selection. Try an updated Chrome/Edge browser or the PowerShell commands above.");
+      return;
+    }
+    try {
+      picker.disabled = true;
+      refreshPickerLabel();
+      setFinderMessage("Please wait. The scan runs locally in your browser.");
+      const dir = await window.showDirectoryPicker({mode:"read"});
+      const found = [];
+      let visited = 0;
+      let limited = false;
+      async function walk(handle, prefix, depth) {
+        if (depth > 12 || visited >= 30000) {limited = true; return;}
+        for await (const entry of handle.values()) {
+          visited++;
+          if (visited > 30000) {limited = true; return;}
+          const relativePath = prefix + entry.name;
+          if (entry.kind === "file" && /\.asar$/i.test(entry.name)) found.push(relativePath);
+          if (entry.kind === "directory" && depth < 12) await walk(entry, relativePath + "/", depth + 1);
         }
       }
-      await walk(dir,'',0);
-      if(found.length){result.textContent='Selected folder: '+dir.name+'\n\nASAR files found (relative paths):\n'+found.join('\n')+'\n\nFor an absolute path, use File Explorer or the PowerShell command.';}
-      else{result.textContent='No ASAR files found in the selected folder.';}
-      if(limited)result.textContent+='\n\nScan limit reached (30,000 entries or 12 folder levels). Choose a smaller folder.';
-    }catch(err){if(err&&err.name==='AbortError'){result.textContent='Folder selection cancelled.';}else{result.textContent='Could not read folder: '+(err&&err.message?err.message:'Access denied');}}
-    finally{picker.disabled=false;picker.textContent='Select installation folder and find ASAR';}
+      await walk(dir, "", 0);
+      let message = found.length
+        ? "Selected folder: " + dir.name + "\n\nASAR files found (relative paths):\n" + found.join("\n") + "\n\nFor an absolute path, use File Explorer or the PowerShell command."
+        : "No ASAR files found in the selected folder.";
+      if (limited) message += "\n\nScan limit reached (30,000 entries or 12 folder levels). Choose a smaller folder.";
+      setFinderMessage(message);
+    } catch (err) {
+      if (err && err.name === "AbortError") setFinderMessage("Folder selection cancelled.");
+      else setFinderMessage("Could not read folder: " + (err && err.message ? err.message : "Access denied"));
+    } finally {
+      picker.disabled = false;
+      refreshPickerLabel();
+    }
   });
 })();
 </script>
+<script src="i18n.js" defer></script>
 </body>
 </html>
